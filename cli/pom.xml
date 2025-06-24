@@ -75,6 +75,9 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.6.0</version>
                 <configuration>
+                    <!-- https://stackoverflow.com/questions/11314182/maven-shade-plugin-adding-dependency-reduced-pom-xml-to-base-directory -->
+                    <!-- https://maven.apache.org/plugins/maven-shade-plugin/shade-mojo.html#createDependencyReducedPom -->
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
                     <transformers>
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                             <manifestEntries>
