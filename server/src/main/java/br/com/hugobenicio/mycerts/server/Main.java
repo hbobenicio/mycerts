@@ -9,6 +9,7 @@ import io.javalin.http.ContentType;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -18,9 +19,14 @@ public class Main {
             format("%s; charset=%s", ContentType.HTML, Charset.defaultCharset().name());
 
     public static void main(String[] args) {
-        //TODO parameterize these configurations
-        var host = "localhost";
-        var port = 8080;
+        // Configurations
+        String configServerHost = Optional.ofNullable(System.getenv("MYCERTS_SERVER_HOST"))
+                .map(String::trim)
+                .orElse("localhost");
+        int configServerPort = Optional.ofNullable(System.getenv("MYCERTS_SERVER_PORT"))
+                .map(String::trim)
+                .map(Integer::parseInt)
+                .orElse(8080);
 
         // Template Engine
         Handlebars handlebars = handlebarsCreate();
@@ -69,7 +75,7 @@ public class Main {
         app.after(AccessLogMiddleware::afterAllHandler);
 
         // Serving
-        app.start(host, port);
+        app.start(configServerHost, configServerPort);
     }
 
     /**
