@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MyCerts</title>
+    {{#if production}}
+        <link type="text/css" rel="stylesheet" href="webjars/bootstrap/5.3.6/css/bootstrap.min.css">
+    {{else}}
+        <link type="text/css" rel="stylesheet" href="webjars/bootstrap/5.3.6/css/bootstrap.css">
+    {{/if}}
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <button class="navbar-toggler" type="button"
+                                aria-controls="navbarSupportedContent"
+                                aria-expanded="false"
+                                aria-label="Toggle navigation"
+                                data-toggle="collapse"
+                                data-target="#navbarSupportedContent">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <a class="navbar-brand" href="#">
+                            <img src="assets/certificate-4.png" alt="Certificado" width="48" height="48">
+                        </a>
+                    </div>
+                    <div class="col">
+                        <div id="navbarSupportedContent" class="collapse navbar-collapse">
+                            <ul class="navbar-nav mr-auto">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="#">Certificados</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </nav>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Certificados</li>
+            </ol>
+        </nav>
+    </header>
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <main>
+                    <h1>Hello, {{ greeting }}!</h1>
+                </main>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <footer class="bg-dark text-dark text-center">
+                    <a href="https://www.flaticon.com/free-icons/certificate" title="certificate icons">
+                        Certificate icons created by Freepik - Flaticon
+                    </a>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- TODO dynamically select minified bundle -->
+    <!-- The bundle contains every Bootstrap JavaScript plugin and dependency -->
+    <!-- https://getbootstrap.com/docs/5.0/getting-started/introduction/#bundle -->
+{{#if production}}
+    <script src="webjars/bootstrap/5.3.6/js/bootstrap.bundle.min.js"></script>
+{{else}}
+    <script src="webjars/bootstrap/5.3.6/js/bootstrap.bundle.js"></script>
+{{/if}}
+
+    <!-- HTMX -->
+{{#if production}}
+    <script src="webjars/htmx.org/2.0.4/dist/htmx.min.js"></script>
+{{else}}
+    <script src="webjars/htmx.org/2.0.4/dist/htmx.js"></script>
+{{/if}}
+</body>
+</html>
