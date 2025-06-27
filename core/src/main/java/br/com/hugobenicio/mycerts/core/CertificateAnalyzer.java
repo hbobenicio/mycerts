@@ -7,10 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.*;
@@ -324,7 +321,7 @@ public class CertificateAnalyzer {
         log.info("expiration report done");
     }
 
-    public void saveCertsToFile(String filePath, String password) throws IOException {
+    public void saveCertsToFile(File outputFile, String password) throws IOException {
         //TODO check if file already exists (error if it does)
         char[] passwordCharArray = password.toCharArray();
         try {
@@ -339,7 +336,7 @@ public class CertificateAnalyzer {
             }
 
             // save it to the giving file
-            try (var fos = new FileOutputStream(filePath)) {
+            try (var fos = new FileOutputStream(outputFile)) {
                 try {
                     ks.store(fos, passwordCharArray);
                 } catch (KeyStoreException e) {

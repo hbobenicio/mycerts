@@ -6,6 +6,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -17,56 +18,62 @@ public class DownloadCommand implements Runnable {
 
     @Option(
             names = {"--host"},
-            required = true,
             description = "The server's hostname",
-            interactive = true
+            required = true
     )
     private String host;
 
     @Option(
             names = {"--port"},
+            description = "The server's port",
             required = false,
             defaultValue = "443",
-            description = "The server's port",
-            showDefaultValue = CommandLine.Help.Visibility.ALWAYS,
-            interactive = true
+            showDefaultValue = CommandLine.Help.Visibility.ALWAYS
     )
     private Integer port;
 
     @Option(
             names = {"--sni"},
-            required = false,
-            //TODO how to set default value from another option?
-            description = "Server Name Indication (SNI)"
+            description = "Server Name Indication (SNI)",
+            required = false
     )
     private String sni;
 
     @Option(
+            names = {"--output", "-o"},
+            description = "Output file where the Truststore will be created",
+            required = true
+    )
+    private File outputFile;
+
+    @Option(
             names = {"--password"},
-            required = false,
+            required = true,
             interactive = true,
             defaultValue = "changeit",
-            description = "The keystore password",
-            showDefaultValue = CommandLine.Help.Visibility.ALWAYS
+            description = "used keystore password",
+            showDefaultValue = CommandLine.Help.Visibility.ALWAYS,
+            echo = false
     )
     private String password;
 
     @Override
     public void run() {
+
+        // if sni is not given, use sni = host
         String serverNameIndicator = Optional.ofNullable(this.sni)
                 .filter(String::isBlank)
                 .map(String::trim)
                 .orElse(this.host);
 
-        var outputFilePath = "ca.truststore.jks";
-
         var certificateAnalyzer = new CertificateAnalyzer();
         try {
             certificateAnalyzer.loadCertificatesFromRemoteServer(this.host, this.port, serverNameIndicator);
-            certificateAnalyzer.saveCertsToFile(outputFilePath, this.password);
+            certificateAnalyzer.saveCertsToFile(this.outputFile, this.password);
+            //certificateAnalyzer.expirationReport();
         } catch (LoadingCertificateException | IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.printf("truststore generated successfully. path=\"%s\"%n", outputFilePath);
+        System.out.printf("truststore generated successfully. path=\"%s\"%n", this.outputFile);
     }
 }

@@ -1,15 +1,14 @@
 package br.com.hugobenicio.mycerts.cli.cmd;
 
-import picocli.CommandLine.*;
+import br.com.hugobenicio.mycerts.core.poke.TlsPokeService;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.concurrent.Callable;
 
 @Command(name = "poke", description = "Pokes a server to test SSL connectivity (aka SSLPoke)")
-public class PokeCommand implements Runnable {
+public class PokeCommand implements Callable<Integer> {
 
     @Option(
             names = {"--host"},
@@ -27,24 +26,9 @@ public class PokeCommand implements Runnable {
     private Integer port;
 
     @Override
-    public void run() {
-        var sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-        try (SSLSocket sslsocket = (SSLSocket) sslsocketfactory.createSocket(this.host, this.port)) {
-
-            InputStream in = sslsocket.getInputStream();
-            OutputStream out = sslsocket.getOutputStream();
-
-            // Write a test byte to get a reaction :)
-            out.write(1);
-
-            while (in.available() > 0) {
-                System.out.print(in.read());
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        System.out.println("Successfully connected");
+    public Integer call() throws IOException {
+        var tlsPokeService = new TlsPokeService(this.host, this.port);
+        tlsPokeService.poke();
+        return 0;
     }
 }
